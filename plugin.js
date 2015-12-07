@@ -254,7 +254,8 @@ LayoutManager.prototype.changeLayoutAction = function (newLayoutName) {
       // Due to this issue http://dev.ckeditor.com/ticket/12524
       var uniqueId = new Date().getTime() + Math.floor((Math.random() * 100 ) + 1);
       var insertedColEditable = new CKEDITOR.dom.element('div');
-      insertedColEditable.addClass('columnEditable' + uniqueId + ' layout-column-editable');
+      insertedColEditable.addClass('columnEditable' + uniqueId);
+      insertedColEditable.addClass('layout-column-editable');
       insertedCol.append(insertedColEditable);
       row.append(insertedCol);
       selectedWidget.initEditable(uniqueId, {
