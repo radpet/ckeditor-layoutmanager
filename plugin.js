@@ -181,6 +181,7 @@ LayoutManager.prototype.createDialogDefinition = function (title, minWidth, minH
 
 LayoutManager.prototype.insertLayoutAction = function (name) {
   this.editor.execCommand(name);
+  this.editor.fire('layoutmanager:layout-inserted');
 };
 
 LayoutManager.prototype.addLayoutDialog = function () {
@@ -200,7 +201,7 @@ LayoutManager.prototype.changeLayoutAction = function (newLayoutName) {
   var columns = row.getChildren();
   var columnsCount = columns.count();
 
-  var newColumns = newLayoutName.split('/')
+  var newColumns = newLayoutName.split('/');
   var newColumnsCount = newColumns.length;
 
   var attributeTemplate = [];
@@ -347,42 +348,42 @@ LayoutManager.prototype.removeLayoutWidget = function () {
  */
 function LayoutBuilder() {
   var defaultLayoutTemplates = [];
-  defaultLayoutTemplates.push(new CKEDITOR.template('<div class="layoutmanager">'+
-        '<div class="container-fluid layout-container">'+
-            '<div class="row layout-row" >'+
-                '<div class="col-xs-{size1} col-sm-{size1} col-md-{size1} col-lg-{size1} layout-column">'+
-                    '<div class="layout-column-one layout-column-editable"><p></p></div>'+
-                '</div>'+
-            '</div>'+
-        '</div>'+
-    '</div>'));
-  defaultLayoutTemplates.push(new CKEDITOR.template('<div class="layoutmanager">'+
-        '<div class="container-fluid layout-container">'+
-            '<div class="row layout-row">'+
-                '<div class="col-xs-{size1} col-sm-{size1} col-md-{size1} col-lg-{size1} layout-column ">'+
-                    '<div class="layout-column-one layout-column-editable"><p></p></div>'+
-                '</div>'+
-                '<div class="col-xs-{size2} col-sm-{size2} col-md-{size2} col-lg-{size2} layout-column">'+
-                    '<div class="layout-column-two layout-column-editable"><p></p></div>'+
-                '</div>'+
-            '</div>'+
-        '</div>'+
-    '</div>'));
-  defaultLayoutTemplates.push(new CKEDITOR.template('<div class="layoutmanager">'+
-        '<div class="container-fluid layout-container">'+
-            '<div class="row layout-row">'+
-                '<div class="col-xs-{size1} col-sm-{size1} col-md-{size1} col-lg-{size1} layout-column">'+
-                    '<div class="layout-column-one layout-column-editable"><p></p></div>'+
-                '</div>'+
-                '<div class="col-xs-{size2} col-sm-{size2} col-md-{size2} col-lg-{size2} layout-column">'+
-                    '<div class="layout-column-two layout-column-editable"><p></p></div>'+
-                '</div>'+
-                '<div class="col-xs-{size3} col-sm-{size3} col-md-{size3} col-lg-{size3} layout-column">'+
-                    '<div class="layout-column-three layout-column-editable"><p></p></div>'+
-                '</div>'+
-            '</div>'+
-        '</div>'+
-    '</div>'));
+  defaultLayoutTemplates.push(new CKEDITOR.template('<div class="layoutmanager">' +
+      '<div class="container-fluid layout-container">' +
+      '<div class="row layout-row" >' +
+      '<div class="col-xs-{size1} col-sm-{size1} col-md-{size1} col-lg-{size1} layout-column">' +
+      '<div class="layout-column-one layout-column-editable"><p></p></div>' +
+      '</div>' +
+      '</div>' +
+      '</div>' +
+      '</div>'));
+  defaultLayoutTemplates.push(new CKEDITOR.template('<div class="layoutmanager">' +
+      '<div class="container-fluid layout-container">' +
+      '<div class="row layout-row">' +
+      '<div class="col-xs-{size1} col-sm-{size1} col-md-{size1} col-lg-{size1} layout-column ">' +
+      '<div class="layout-column-one layout-column-editable"><p></p></div>' +
+      '</div>' +
+      '<div class="col-xs-{size2} col-sm-{size2} col-md-{size2} col-lg-{size2} layout-column">' +
+      '<div class="layout-column-two layout-column-editable"><p></p></div>' +
+      '</div>' +
+      '</div>' +
+      '</div>' +
+      '</div>'));
+  defaultLayoutTemplates.push(new CKEDITOR.template('<div class="layoutmanager">' +
+      '<div class="container-fluid layout-container">' +
+      '<div class="row layout-row">' +
+      '<div class="col-xs-{size1} col-sm-{size1} col-md-{size1} col-lg-{size1} layout-column">' +
+      '<div class="layout-column-one layout-column-editable"><p></p></div>' +
+      '</div>' +
+      '<div class="col-xs-{size2} col-sm-{size2} col-md-{size2} col-lg-{size2} layout-column">' +
+      '<div class="layout-column-two layout-column-editable"><p></p></div>' +
+      '</div>' +
+      '<div class="col-xs-{size3} col-sm-{size3} col-md-{size3} col-lg-{size3} layout-column">' +
+      '<div class="layout-column-three layout-column-editable"><p></p></div>' +
+      '</div>' +
+      '</div>' +
+      '</div>' +
+      '</div>'));
 
   var defaultLayoutTypes = [];
   defaultLayoutTypes.push("12");

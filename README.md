@@ -11,3 +11,7 @@ TODO: Write a plugin description
 #### config.layoutmanager_buttonboxWidth = 58 (the width of each layout-preview button in the dialog)
 
 #### Name for adding into the toolbar : "LayoutManager"
+
+## Events
+
+layoutmanager:layout-inserted - fired when layout is inserted
