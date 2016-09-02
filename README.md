@@ -15,3 +15,6 @@ TODO: Write a plugin description
 ## Events
 
 layoutmanager:layout-inserted - fired when layout is inserted
+
+## Dependencies
+https://jquery.com/

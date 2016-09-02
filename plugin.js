@@ -197,9 +197,11 @@ LayoutManager.prototype.changeLayoutAction = function (newLayoutName) {
   selectedWidget.name = newLayoutName;
 
   var currentlySelectedLayoutWidgetElement = selectedWidget.element;
+  var $row = $(selectedWidget.element.$).find('.layout-row');
   var row = currentlySelectedLayoutWidgetElement.getChildren().getItem(0).getChildren().getItem(0);
+  var $columns = $row.find('.layout-column');
   var columns = row.getChildren();
-  var columnsCount = columns.count();
+  var columnsCount = $columns.length;
 
   var newColumns = newLayoutName.split('/');
   var newColumnsCount = newColumns.length;
@@ -213,54 +215,54 @@ LayoutManager.prototype.changeLayoutAction = function (newLayoutName) {
 
   if (newColumnsCount <= columnsCount) {
     for (var i = 0; i < newColumnsCount; i++) {
-      var currentColumn = columns.getItem(i);
-      var attributeString = currentColumn.getAttribute('class');
+      var $currentColumn = $($columns[i]);
+      var attributeString = $currentColumn.attr('class');
       var attributes = attributeString.split(' ');
       for (var j = 0; j < attributes.length; j++) {
         if (pattern.test(attributes[j])) {
-          currentColumn.removeClass(attributes[j]);
+          $currentColumn.removeClass(attributes[j]);
         }
       }
       for (var j = 0; j < attributeTemplate.length; j++) {
-        currentColumn.addClass(attributeTemplate[j].replace('{size}', newColumns[i]));
+        $currentColumn.addClass(attributeTemplate[j].replace('{size}', newColumns[i]));
       }
     }
     for (var i = columnsCount - 1; i >= newColumnsCount; i--) {
-      var lastColumn = columns.getItem(i);
-      var penult = columns.getItem(i - 1);
-      lastColumn.getChildren().getItem(0).moveChildren(penult.getChildren().getItem(0));
+      var lastColumn = $($columns[i]);
+      var newLast = $($columns[i - 1]);
+      $(lastColumn.children()[0]).children().appendTo($(newLast.children()[0]));
       lastColumn.remove();
     }
   } else {
     for (var i = 0; i < columnsCount; i++) {
-      var currentColumn = columns.getItem(i);
-      var attributeString = currentColumn.getAttribute('class');
+      var $currentColumn = $($columns[i]);
+      var attributeString = $currentColumn.attr('class');
       var attributes = attributeString.split(' ');
       for (var j = 0; j < attributes.length; j++) {
         if (pattern.test(attributes[j])) {
-          currentColumn.removeClass(attributes[j]);
+          $currentColumn.removeClass(attributes[j]);
         }
       }
       for (var j = 0; j < attributeTemplate.length; j++) {
-        currentColumn.addClass(attributeTemplate[j].replace('{size}', newColumns[i]));
+        $currentColumn.addClass(attributeTemplate[j].replace('{size}', newColumns[i]));
       }
     }
+
+    var dict = ['one', 'two', 'three'];
+
     for (var i = columnsCount; i < newColumnsCount; i++) {
-      var insertedCol = new CKEDITOR.dom.element('div');
-      insertedCol.addClass('layout-column');
+      var $newCol = $('<div>').addClass('layout-column');
       for (var j = 0; j < attributeTemplate.length; j++) {
-        insertedCol.addClass(attributeTemplate[j].replace('{size}', newColumns[i]));
+        $newCol.addClass(attributeTemplate[j].replace('{size}', newColumns[i]));
       }
       // Generate unique id for the editable
       // Due to this issue http://dev.ckeditor.com/ticket/12524
       var uniqueId = new Date().getTime() + Math.floor((Math.random() * 100 ) + 1);
-      var insertedColEditable = new CKEDITOR.dom.element('div');
-      insertedColEditable.addClass('columnEditable' + uniqueId);
-      insertedColEditable.addClass('layout-column-editable');
-      insertedCol.append(insertedColEditable);
-      row.append(insertedCol);
+      var insertedColEditable = $('<div>').addClass('layout-column-editable').addClass('layout-column-' + dict[i]);
+      $newCol.append(insertedColEditable);
+      $row.append($newCol);
       selectedWidget.initEditable(uniqueId, {
-        selector: '.columnEditable' + uniqueId
+        selector: '.layout-column-' + dict[i]
       });
     }
   }
@@ -348,42 +350,42 @@ LayoutManager.prototype.removeLayoutWidget = function () {
  */
 function LayoutBuilder() {
   var defaultLayoutTemplates = [];
-  defaultLayoutTemplates.push(new CKEDITOR.template('<div class="layoutmanager">' +
-      '<div class="container-fluid layout-container">' +
-      '<div class="row layout-row" >' +
-      '<div class="col-xs-{size1} col-sm-{size1} col-md-{size1} col-lg-{size1} layout-column">' +
-      '<div class="layout-column-one layout-column-editable"><p></p></div>' +
-      '</div>' +
-      '</div>' +
-      '</div>' +
-      '</div>'));
-  defaultLayoutTemplates.push(new CKEDITOR.template('<div class="layoutmanager">' +
-      '<div class="container-fluid layout-container">' +
-      '<div class="row layout-row">' +
-      '<div class="col-xs-{size1} col-sm-{size1} col-md-{size1} col-lg-{size1} layout-column ">' +
-      '<div class="layout-column-one layout-column-editable"><p></p></div>' +
-      '</div>' +
-      '<div class="col-xs-{size2} col-sm-{size2} col-md-{size2} col-lg-{size2} layout-column">' +
-      '<div class="layout-column-two layout-column-editable"><p></p></div>' +
-      '</div>' +
-      '</div>' +
-      '</div>' +
-      '</div>'));
-  defaultLayoutTemplates.push(new CKEDITOR.template('<div class="layoutmanager">' +
-      '<div class="container-fluid layout-container">' +
-      '<div class="row layout-row">' +
-      '<div class="col-xs-{size1} col-sm-{size1} col-md-{size1} col-lg-{size1} layout-column">' +
-      '<div class="layout-column-one layout-column-editable"><p></p></div>' +
-      '</div>' +
-      '<div class="col-xs-{size2} col-sm-{size2} col-md-{size2} col-lg-{size2} layout-column">' +
-      '<div class="layout-column-two layout-column-editable"><p></p></div>' +
-      '</div>' +
-      '<div class="col-xs-{size3} col-sm-{size3} col-md-{size3} col-lg-{size3} layout-column">' +
-      '<div class="layout-column-three layout-column-editable"><p></p></div>' +
-      '</div>' +
-      '</div>' +
-      '</div>' +
-      '</div>'));
+  defaultLayoutTemplates.push(new CKEDITOR.template('<div class="layoutmanager">\
+        <div class="container-fluid layout-container">\
+             <div class="row layout-row" >\
+                 <div class="col-xs-{size1} col-sm-{size1} col-md-{size1} col-lg-{size1} layout-column">\
+                    <div class="layout-column-one layout-column-editable"><p></p></div>\
+                </div>\
+            </div>\
+        </div>\
+    </div>'));
+  defaultLayoutTemplates.push(new CKEDITOR.template('<div class="layoutmanager">\
+        <div class="container-fluid layout-container">\
+            <div class="row layout-row">\
+                 <div class="col-xs-{size1} col-sm-{size1} col-md-{size1} col-lg-{size1} layout-column ">\
+                     <div class="layout-column-one layout-column-editable"><p></p></div>\
+                </div>\
+                 <div class="col-xs-{size2} col-sm-{size2} col-md-{size2} col-lg-{size2} layout-column">\
+                    <div class="layout-column-two layout-column-editable"><p></p></div>\
+                 </div>\
+            </div>\
+        </div>\
+    </div>'));
+  defaultLayoutTemplates.push(new CKEDITOR.template('<div class="layoutmanager">\
+         <div class="container-fluid layout-container">\
+            <div class="row layout-row">\
+                <div class="col-xs-{size1} col-sm-{size1} col-md-{size1} col-lg-{size1} layout-column">\
+                    <div class="layout-column-one layout-column-editable"><p></p></div>\
+                </div>\
+                <div class="col-xs-{size2} col-sm-{size2} col-md-{size2} col-lg-{size2} layout-column">\
+                    <div class="layout-column-two layout-column-editable"><p></p></div>\
+                </div>\
+                <div class="col-xs-{size3} col-sm-{size3} col-md-{size3} col-lg-{size3} layout-column">\
+                    <div class="layout-column-three layout-column-editable"><p></p></div>\
+                </div>\
+            </div>\
+        </div>\
+    </div>'));
 
   var defaultLayoutTypes = [];
   defaultLayoutTypes.push("12");
