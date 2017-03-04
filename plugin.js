@@ -17,6 +17,7 @@ CKEDITOR.plugins.add('layoutmanager', {
  * config.layoutmanager_allowedContent  By default is set to allow all tags.
  * config.layoutmanager_buttonBoxWidth  The width of each layout-preview button in the dialog.
  * config.layoutmanager_removeLayoutMsg The message displayed on the window for confirmation of the remove layout operation.
+ * config.layoutmanager_columnStart     The Bootstrap grid device breakpoint: xs, sm, md, lg.
  */
 function pluginInit(editor) {
   if (editor.config.layoutmanager_loadbootstrap) {
@@ -81,7 +82,14 @@ function pluginInit(editor) {
  */
 function LayoutManager(editor) {
   this.editor = editor;
-  this.layoutBuilder = new LayoutBuilder();
+
+  var columnStart = this.editor.config.layoutmanager_columnStart;
+
+  if (columnStart === undefined) {
+    var columnStart = 'xs';
+  }
+
+  this.layoutBuilder = new LayoutBuilder(columnStart);
   if (!editor.config.layoutmanager_buildDefaultLayouts) {
     this.layoutBuilder.buildDefaultLayouts();
   }
@@ -207,10 +215,7 @@ LayoutManager.prototype.changeLayoutAction = function (newLayoutName) {
   var newColumnsCount = newColumns.length;
 
   var attributeTemplate = [];
-  attributeTemplate.push('col-xs-{size}');
-  attributeTemplate.push('col-sm-{size}');
-  attributeTemplate.push('col-md-{size}');
-  attributeTemplate.push('col-lg-{size}');
+  attributeTemplate.push('col-' + columnStart + '-{size}');
   var pattern = /col-(xs|sm|md|lg)-/;
 
   if (newColumnsCount <= columnsCount) {
@@ -348,12 +353,12 @@ LayoutManager.prototype.removeLayoutWidget = function () {
  *  Class that builds the default templates of the layouts. It is also used to hold all available
  *  layout templates and provide them for use in the widget creation.
  */
-function LayoutBuilder() {
+function LayoutBuilder(columnStart) {
   var defaultLayoutTemplates = [];
   defaultLayoutTemplates.push(new CKEDITOR.template('<div class="layoutmanager">' +
     '<div class="container-fluid layout-container">' +
     '<div class="row layout-row" >' +
-    '<div class="col-xs-{size1} col-sm-{size1} col-md-{size1} col-lg-{size1} layout-column">' +
+    '<div class="col-' + columnStart + '-{size1} layout-column">' +
     '<div class="layout-column-one layout-column-editable"><p></p></div>' +
     '</div>' +
     '</div>' +
@@ -362,10 +367,10 @@ function LayoutBuilder() {
   defaultLayoutTemplates.push(new CKEDITOR.template('<div class="layoutmanager">' +
     '<div class="container-fluid layout-container">' +
     '<div class="row layout-row">' +
-    '<div class="col-xs-{size1} col-sm-{size1} col-md-{size1} col-lg-{size1} layout-column ">' +
+    '<div class="col-' + columnStart + '-{size1} layout-column ">' +
     '<div class="layout-column-one layout-column-editable"><p></p></div>' +
     '</div>' +
-    '<div class="col-xs-{size2} col-sm-{size2} col-md-{size2} col-lg-{size2} layout-column">' +
+    '<div class="col-' + columnStart + '-{size2} layout-column">' +
     '<div class="layout-column-two layout-column-editable"><p></p></div>' +
     '</div>' +
     '</div>' +
@@ -374,13 +379,13 @@ function LayoutBuilder() {
   defaultLayoutTemplates.push(new CKEDITOR.template('<div class="layoutmanager">' +
     '<div class="container-fluid layout-container">' +
     '<div class="row layout-row">' +
-    '<div class="col-xs-{size1} col-sm-{size1} col-md-{size1} col-lg-{size1} layout-column">' +
+    '<div class="col-' + columnStart + '-{size1} layout-column">' +
     '<div class="layout-column-one layout-column-editable"><p></p></div>' +
     '</div>' +
-    '<div class="col-xs-{size2} col-sm-{size2} col-md-{size2} col-lg-{size2} layout-column">' +
+    '<div class="col-' + columnStart + '-{size2} layout-column">' +
     '<div class="layout-column-two layout-column-editable"><p></p></div>' +
     '</div>' +
-    '<div class="col-xs-{size3} col-sm-{size3} col-md-{size3} col-lg-{size3} layout-column">' +
+    '<div class="col-' + columnStart + '-{size3} layout-column">' +
     '<div class="layout-column-three layout-column-editable"><p></p></div>' +
     '</div>' +
     '</div>' +

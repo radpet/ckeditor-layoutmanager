@@ -10,6 +10,8 @@ TODO: Write a plugin description
 #### config.layoutmanager_allowedContent (all tags are allowed by default)
 #### config.layoutmanager_buttonboxWidth = 58 (the width of each layout-preview button in the dialog)
 
+#### config.layoutmanager_columnStart = 'xs' (bootstrap grid device breakpoints: xs, sm, md, lg)
+
 #### Name for adding into the toolbar : "LayoutManager"
 
 ## Events
