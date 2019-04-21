@@ -1,6 +1,7 @@
-# LayoutManager
+# LayoutManager (Deprecated)
 
-TODO: Write a plugin description
+### This plugin is no longer supported. 
+#### Warning! Legacy code and bad implementation.
 
 ## Configuration
 
